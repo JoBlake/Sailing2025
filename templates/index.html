@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPX Track Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        .info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #e8f4f8;
+            border-radius: 4px;
+        }
+        .track-list {
+            margin-bottom: 20px;
+        }
+        .track-item {
+            padding: 8px;
+            margin: 4px 0;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+            border-radius: 2px;
+        }
+        .map-container {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .error {
+            color: #d32f2f;
+            background-color: #ffebee;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #d32f2f;
+        }
+        .bounds-info {
+            font-family: monospace;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GPX Sailing Track Viewer</h1>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% else %}
+            <div class="info">
+                <h3>Track Information</h3>
+                <div class="track-list">
+                    <strong>Loaded Tracks ({{ tracks|length }}):</strong>
+                    {% for track in tracks %}
+                        <div class="track-item">
+                            {{ track.name }} - {{ track.points|length }} points
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if bounds %}
+                    <div class="bounds-info">
+                        <strong>Bounding Box:</strong><br>
+                        North: {{ "%.6f"|format(bounds.max_lat) }}° |
+                        South: {{ "%.6f"|format(bounds.min_lat) }}° |
+                        East: {{ "%.6f"|format(bounds.max_lon) }}° |
+                        West: {{ "%.6f"|format(bounds.min_lon) }}°
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="map-container">
+                {{ map_html|safe }}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
